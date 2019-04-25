@@ -108,8 +108,8 @@ before { stub_const "S3Object", S3ObjectMock }
 
 ### Do not `sleep` in tests
 
-When writing System Tests avoid undeterministic `sleep 1` and
+When writing System Tests avoid indeterministic `sleep 1` and
 use `have_xyz` matchers instead–they keep internal timeout and could _wait_ for
-event to happend.
+event to happened.
 
 Remember: **Time is relative** (Einstein).

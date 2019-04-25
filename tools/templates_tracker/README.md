@@ -1,6 +1,6 @@
 # Templates Tracker
 
-Track view templates used during the tests execution and print the list of used and, which is more importantly, unused templates.
+Track view templates used during the execution of the tests and print the list of the used and, which is, more importantly, unused templates.
 
 ## Usage
 

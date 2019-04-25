@@ -1,6 +1,6 @@
 # Terraforming Rails
 
-A collection of tools and guides (**WIP**) to help you turn legacy code into a [legendary code](https://twitter.com/cackhanded/status/1019216124729352192?s=21).
+A collection of tools and guides to help you turn legacy code into [legendary code](https://twitter.com/cackhanded/status/1019216124729352192?s=21).
 
 Based on the RailsConf 2019 talk ["Terraforming legacy Rails applications"](https://railsconf.com/program/sessions#session-832) (slides and video are coming soon).
 
@@ -13,7 +13,7 @@ Based on the RailsConf 2019 talk ["Terraforming legacy Rails applications"](http
 
 These scripts have been created during the development of different Rails projects at [Evil Martians](http://evilmartians.com).
 
-They're not universal enough to be extracted into libraries (some depend on particalar Rails version or rely on project-specific assumptions), but they could be used a starting point for building tools for your project.
+They're not universal enough to be extracted into libraries (some depend on particular Rails version or rely on project-specific assumptions), but they could be used a starting point for building tools for your project.
 
 - [Lint/Env](./tools/lint_env) – RuboCop cop (restrict the usage of `ENV` and `Rails.env` in the app)
 - [FactoryLinter](./tools/factory_linter) – lint factory definitions

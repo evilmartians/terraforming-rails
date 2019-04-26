@@ -39,6 +39,9 @@ They're not universal enough to be extracted into libraries (some depend on part
 
 - [traceroute](github.com/amatsuda/traceroute) – detect unused routes/controller actions
 
+#### Configuration
+- [anyway_config](https://github.com/palkan/anyway_config) – transparently use multiple sources of configuration at once
+
 ### Automation Tools
 
 - [lefthook](https://github.com/Arkweid/lefthook) – language-agnostic git hook manager

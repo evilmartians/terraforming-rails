@@ -27,17 +27,18 @@ They're not universal enough to be extracted into libraries (some depend on part
 - [TestProf](http://test-prof.evilmartians.io) – analyze and improve test suite performance
 
 #### Security
-- [bundler-audit](github.com/rubysec/bundler-audit) – check deps for known CVEs
+- [bundler-audit](https://github.com/rubysec/bundler-audit) – check deps for known CVEs
 - [brakeman](https://brakemanscanner.org) – detect the app code's security issues
 
 #### Database
-- [database_validations](github.com/toptal/database_validations) – validations consistent with the DB constraints
-- [database_consistency](github.com/djezzl/database_consistency) - check the consistency of the DB constraints and models validations
+- [database_validations](https://github.com/toptal/database_validations) – validations consistent with the DB constraints
+- [database_consistency](https://github.com/djezzl/database_consistency) - check the consistency of the DB constraints and models validations
 - [isolator](https://github.com/palkan/isolator) – detect transactions with side-effects (_non-atomic_)
 
 #### Dead code elimination
 
-- [traceroute](github.com/amatsuda/traceroute) – detect unused routes/controller actions
+- [traceroute](https://github.com/amatsuda/traceroute) – detect unused routes/controller actions
+- [factory_trace](https://github.com/djezzzl/factory_trace) – detect unused FactoryBot factories/traits
 
 #### Configuration
 - [anyway_config](https://github.com/palkan/anyway_config) – transparently use multiple sources of configuration at once

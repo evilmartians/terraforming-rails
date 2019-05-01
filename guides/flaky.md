@@ -19,7 +19,8 @@ For example, `config.transactional_tests = true` for RSpec.
 
 - Find leaking time travelling with [`TimecopLinter`](../tools/timecop_linter)
 - Add `config.after { Timecop.return }`
- 
+- If you rely on time zones in the app, randomize the current time zone in tests (e.g. with [`zonebie`](https://github.com/alindeman/zonebie)) to make sure your tests don't depend on it.
+
 ### Clear cache / in-memory stores after each test
 
 For example, for ActiveJob (to avoid [`have_enqueued_job`](https://relishapp.com/rspec/rspec-rails/docs/matchers/have-enqueued-job-matcher) matcher catching jobs from other tests):

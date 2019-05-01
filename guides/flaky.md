@@ -113,3 +113,7 @@ use `have_xyz` matchers instead–they keep internal timeout and could _wait_ fo
 event to happened.
 
 Remember: **Time is relative** (Einstein).
+
+### Match arrays with `match_array`
+
+If you don't need to the exact ordering, use [`match_array`](https://www.rubydoc.info/github/rspec/rspec-expectations/RSpec/Matchers:match_array) matcher instead of `eq([...])`.

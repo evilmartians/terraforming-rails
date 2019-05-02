@@ -2,7 +2,7 @@
 
 A collection of tools and guides to help you turn legacy code into [legendary code](https://twitter.com/cackhanded/status/1019216124729352192?s=21).
 
-Based on the RailsConf 2019 talk ["Terraforming legacy Rails applications"](https://railsconf.com/program/sessions#session-832) (slides and video are coming soon).
+Based on the RailsConf 2019 talk ["Terraforming legacy Rails applications"](https://railsconf.com/program/sessions#session-832) ([slides](https://speakerdeck.com/palkan/railsconf-2019-terraforming-legacy-rails-applications), video is coming soon).
 
 <a href="https://evilmartians.com/">
 <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54"></a>

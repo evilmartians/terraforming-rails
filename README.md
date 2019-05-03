@@ -32,7 +32,7 @@ They're not universal enough to be extracted into libraries (some depend on part
 
 #### Database
 - [database_validations](https://github.com/toptal/database_validations) – validations consistent with the DB constraints
-- [database_consistency](https://github.com/djezzl/database_consistency) - check the consistency of the DB constraints and models validations
+- [database_consistency](https://github.com/djezzzl/database_consistency) - check the consistency of the DB constraints and models validations
 - [isolator](https://github.com/palkan/isolator) – detect transactions with side-effects (_non-atomic_)
 
 #### Dead code elimination

@@ -118,3 +118,8 @@ Remember: **Time is relative** (Einstein).
 ### Match arrays with `match_array`
 
 If you don't need to the exact ordering, use [`match_array`](https://www.rubydoc.info/github/rspec/rspec-expectations/RSpec/Matchers:match_array) matcher instead of `eq([...])`.
+
+## Read more
+
+- [Tests that sometimes fail](https://samsaffron.com/archive/2019/05/15/tests-that-sometimes-fail) by Sam Saffron
+- [Fixing Flaky Tests Like a Detective](https://speakerdeck.com/sonjapeterson/fixing-flaky-tests-like-a-detective) by Sonja Peterson

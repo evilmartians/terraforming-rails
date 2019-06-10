@@ -119,6 +119,22 @@ Remember: **Time is relative** (Einstein).
 
 If you don't need to the exact ordering, use [`match_array`](https://www.rubydoc.info/github/rspec/rspec-expectations/RSpec/Matchers:match_array) matcher instead of `eq([...])`.
 
+### Testing `NotFound` with random IDs
+
+If you test not-found-like behaviour you can make up non-existent IDs like this:
+
+```ruby
+expect { User.find(1234) }.to raise_error(ActiveRecord::RecordNotFound)
+```
+
+There is a change that the record with this ID exists (if you have `before`/`before(:all)` or fixtures).
+
+A better "ID" for this purposes is "-1":
+
+```ruby
+expect { User.find(-1) }.to raise_error(ActiveRecord::RecordNotFound)
+```
+
 ## Read more
 
 - [Tests that sometimes fail](https://samsaffron.com/archive/2019/05/15/tests-that-sometimes-fail) by Sam Saffron

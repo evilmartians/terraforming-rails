@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+
+# This script is used to generate GitHub app access token
+# used by Danger.
+#
+# Required env vars:
+#
+# GITHUB_APP_PRIVATE_KEY_PATH or GITHUB_APP_PRIVATE_KEY - path to the app's private key or the key itself
+# GITHUB_APP_ID – the app's ID (you can find it on the app's page)
+# GITHUB_APP_INSTALLATION_ID – the installation's ID (the instance of the app for the repo/organization).
+#
+# You can find the installation ID on the Project -> Settings -> Integrations & Services page:
+# under "Installed GitHub Apps" find the app and click "Configure".
+# The resulting URL will contain the installation ID, e.g. /organizations/myorg/settings/installations/12345.
+#
+# See https://developer.github.com/apps/building-github-apps/authenticating-with-github-apps/
+
+require "openssl"
+require "net/http"
+require "json"
+
+# Make this script work both as a standalone executable
+# and as a part of the bundle
+begin
+  require "jwt"
+rescue LoadError
+  require "bundler/inline"
+
+  gemfile do
+    source "https://rubygems.org"
+    gem "jwt"
+  end
+
+  require "jwt"
+end
+
+begin
+
+# Private key contents
+private_pem =
+  if ENV["GITHUB_APP_PRIVATE_KEY_PATH"]
+    File.read(ENV["GITHUB_APP_PRIVATE_KEY_PATH"])
+  else
+    ENV.fetch("GITHUB_APP_PRIVATE_KEY").gsub(/\\n/, "\n")
+  end
+
+private_key = OpenSSL::PKey::RSA.new(private_pem)
+
+payload = {
+  iat: Time.now.to_i,
+  # JWT expiration time (10 minute maximum)
+  exp: Time.now.to_i + (10 * 60),
+  iss: ENV.fetch("GITHUB_APP_ID")
+}
+
+jwt = JWT.encode(payload, private_key, "RS256")
+
+
+uri = URI("https://api.github.com/app/installations/#{ENV.fetch("GITHUB_APP_INSTALLATION_ID")}/access_tokens")
+
+req = Net::HTTP::Post.new(uri)
+req["Authorization"] = "Bearer #{jwt}"
+req["Accept"] = "application/vnd.github.machine-man-preview+json"
+
+res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+  http.request(req)
+end
+
+case res
+when Net::HTTPSuccess, Net::HTTPRedirection
+  puts JSON.parse(res.body).fetch("token")
+else
+  $stderr.puts res.value
+  $stderr.puts res.body
+end
+
+rescue Exception => e
+  $stderr.puts "Failed to generate GitHub token!"
+  $stderr.puts e.message
+
+  exit(1)
+end

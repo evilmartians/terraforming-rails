@@ -1,0 +1,315 @@
+version: 2.1
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout
+      - bundle_install:
+          requires:
+            - checkout
+      - bundle_audit:
+          requires:
+            - bundle_install
+      - rubocop:
+          requires:
+            - bundle_install
+      - danger:
+          requires:
+            - bundle_install
+      - test:
+          requires:
+            - bundle_install
+      - linters:
+          requires:
+            - bundle_install
+      - yarn_install:
+          requires:
+            - checkout
+      - yarn_audit:
+          requires:
+            - yarn_install
+      - yarn_lint:
+          requires:
+            - yarn_install
+      - system_tests:
+          requires:
+            - bundle_install
+            - yarn_install
+commands:
+  prepare_ruby_test_env:
+    description: Prepare external Ruby deps (DB, Redis)
+    steps:
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: dockerize -wait tcp://localhost:6379 -timeout 1m
+      - run: sudo apt-get update -qq
+      - run: sudo apt install postgresql-client -y
+  # Make sure that Bundler 2.x is used as a system one
+  fix_unsmart_bundler:
+    description: Make Bundler 2.0.1 work
+    steps:
+      - run: gem update --system && gem install bundler
+
+executors:
+  ruby:
+    docker:
+      - image: circleci/ruby:2.6.1-node-browsers
+    environment:
+      BUNDLE_PATH: /home/circleci/project/vendor/bundle
+      BUNDLER_VERSION: 2.0.1
+      RAILS_ENV: test
+  rails:
+    docker:
+      - image: circleci/ruby:2.6.1-node-browsers
+      - image: circleci/postgres:11.1-alpine
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: circle_test
+      - image: redis:3.2-alpine
+    environment:
+      BUNDLE_PATH: /home/circleci/project/vendor/bundle
+      BUNDLER_VERSION: 2.0.1
+      RAILS_ENV: test
+      DATABASE_URL: postgresql://root@localhost:5432/circle_test
+      REDIS_URL: redis://localhost:6379/0
+      BOOTSNAP_CACHE_DIR: tmp/bootsnap
+      EVENT_PROF: "factory.create,sql.active_record"
+      EAGER_LOAD: "1"
+  node:
+    docker:
+      - image: circleci/node:11.8.0-stretch
+    environment:
+      NODE_ENV: development
+
+jobs:
+  checkout:
+    executor: ruby
+    steps:
+      - restore_cache:
+          keys:
+            - project-source-v1-{{ .Branch }}-{{ .Revision }}
+            - project-source-v1-{{ .Branch }}
+            - project-source-v1
+      - checkout
+      # Make sure that we perform source code comparisons with the
+      # up-to-date master (e.g., when checking diffs with Danger)
+      - run:
+          name: Refresh master
+          command: git fetch origin master
+      - save_cache:
+          key: project-source-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - .git
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  bundle_install:
+    executor: ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - project-bundle-v1_1-{{ checksum "Gemfile.lock" }}
+            - project-bundle-v1_1
+      - fix_unsmart_bundler
+      # Use --frozen flag to make sure that .lock file is up-to-date
+      - run:
+          name: Installing bundler dependencies
+          command: bundle check || bundle install --frozen
+      # Don't forget to clean the bundle to avoid caching stale deps
+      - run:
+          name: Clean stale dependencies
+          command: bundle clean
+      - save_cache:
+          key: project-bundle-v1_1-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - persist_to_workspace:
+          root: .
+          paths:
+            - vendor/bundle
+
+  bundle_audit:
+    executor: ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - fix_unsmart_bundler
+      - run:
+          name: Bundle audit check
+          command: |
+            bundle exec bundle-audit update && bundle exec bundle-audit check
+
+  rubocop:
+    executor: ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - fix_unsmart_bundler
+      - run:
+          name: Rubocop check
+          command: |
+            bundle exec rubocop
+
+  danger:
+    executor: ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - fix_unsmart_bundler
+      - run:
+          name: Add github.com to known_hosts
+          command: mkdir -p ~/.ssh && ssh-keyscan -H github.com > ~/.ssh/known_hosts
+      - run:
+          name: Danger review
+          command: |
+            DANGER_GITHUB_API_TOKEN=$(bundle exec .circleci/github-token) bundle exec danger
+      - store_artifacts:
+          path: tmp/brakeman
+
+  test:
+    parallelism: 2
+    executor: rails
+    steps:
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - project-bootsnap-v1-{{ .Branch }}-{{ .Revision }}
+            - project-bootsnap-v1-{{ .Branch }}
+            - project-bootsnap-v1
+      - fix_unsmart_bundler
+      - prepare_ruby_test_env
+      # RspecJunitFormatter is required to show Test Summary (https://circleci.com/docs/2.0/configuration-reference/#store_test_results).
+      # Fuubar shows a progress of a test run.
+      # RSpec::Instafail shows failure messages right after the example failed (=faster feedback loop).
+      #
+      # `--tag ~browser` is used to exclude browser/system/feature specs (we have a separate job for them).
+      - run:
+          name: RSpec (without system tests)
+          command: |
+            bundle exec rspec --tag ~browser \
+                              --format RspecJunitFormatter \
+                              --out test-results/rspec.xml \
+                              --format Fuubar \
+                              --require rspec/instafail \
+                              --format RSpec::Instafail \
+                              $(circleci tests glob "spec/**/*_spec.rb" | \
+                              circleci tests split --split-by=timings)
+      - store_test_results:
+          path: test-results
+
+  linters:
+    executor: rails
+    steps:
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - project-bootsnap-v1-{{ .Branch }}-{{ .Revision }}
+            - project-bootsnap-v1-{{ .Branch }}
+            - project-bootsnap-v1
+      - fix_unsmart_bundler
+      - prepare_ruby_test_env
+      # Make sure that schema is up-to-date
+      - run:
+          name: Prepare test db
+          command: bundle exec rails db:test:prepare
+      # db:validate_integrity is a wrapper for database_validations task
+      - run:
+          name: Database Integrity check
+          command: bundle exec rails db:validate_integrity
+      - run:
+          name: Ensure seeds are valid
+          command: bundle exec rails db:seed
+      - run:
+          name: Lint factories
+          command: bundle exec rails factory_lint
+
+  system_tests:
+    parallelism: 1
+    executor: rails
+    steps:
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - project-bootsnap-v1-{{ .Branch }}-{{ .Revision }}
+            - project-bootsnap-v1-{{ .Branch }}
+            - project-bootsnap-v1
+      - fix_unsmart_bundler
+      - prepare_ruby_test_env
+      - restore_cache:
+          keys:
+            - project-assets-v1-{{ .Branch }}-{{ .Revision }}
+            - project-assets-v1-{{ .Branch }}
+            - project-assets-v1
+      - run:
+          name: Precompile assets
+          command: bundle exec rake assets:precompile
+      # Save assets cache for faster precompilation
+      - save_cache:
+          key: project-assets-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - public/packs-test
+      - run:
+          name: RSpec system tests
+          command: |
+            bundle exec rspec --tag browser \
+                              --format RspecJunitFormatter \
+                              --out test-results/rspec.xml \
+                              --format Fuubar \
+                              --require rspec/instafail \
+                              --format RSpec::Instafail \
+                              $(circleci tests glob "spec/system/**/*_spec.rb" | \
+                              circleci tests split --split-by=timings)
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: tmp/capybara_output
+          destination: capybara
+
+  yarn_install:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - project-node-v2-{{ "yarn.lock" }}
+            - project-node-v2
+      - run:
+          name: Updating Yarn
+          command: |
+            sudo npm i -g yarn@1.13.0 && sudo chmod 777 /usr/local/bin/yarn
+      - run:
+          name: Installing NPM dependencies
+          command: yarn install
+      - save_cache:
+          key: project-node-v2-{{ "yarn.lock" }}
+          paths:
+            - node_modules
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
+
+  yarn_audit:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Yarn audit
+          command: yarn audit
+
+  yarn_lint:
+    executor: node
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Yarn lint
+          command: yarn lint

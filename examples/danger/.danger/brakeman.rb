@@ -11,10 +11,10 @@ if tracker.errors.any? || tracker.filtered_warnings.any?
   tracker.options[:output_formats] = [:to_html]
   Brakeman.send(:write_report_to_files, tracker, ["tmp/brakeman/report.html"])
 
-  failure "Brakeman failed!\n"\
-          "Errors: #{tracker.errors.count}.\n" \
-          "Warnings: #{tracker.filtered_warnings.count}\n" \
-          "See #{artefacts_link("report")}."
+  warn "Brakeman failed!\n"\
+       "Errors: #{tracker.errors.count}.\n" \
+       "Warnings: #{tracker.filtered_warnings.count}\n" \
+       "See #{artefacts_link("report")}."
 end
 
 # check whether brakeman ignore config has been changed

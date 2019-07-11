@@ -13,7 +13,7 @@ in-place.
 - Load it in your `rspec_helper.rb`
 - Run tests and watch for warnings:
 
-```
+```sh
 $ bundle exec rspec
 
 📛 ⏰ 📛 Timecop hasn't returned at the end of the test file!

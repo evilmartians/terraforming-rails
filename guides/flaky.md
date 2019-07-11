@@ -2,26 +2,26 @@
 
 Tips on detecting and solving flaky tests in Rails apps.
 
-### Make sure tests run in random order
+## Make sure tests run in random order
 
 For example, `config.order :random` for RSpec.
 
-### Make sure you use transactional tests
+## Make sure you use transactional tests
 
 For example, `config.transactional_tests = true` for RSpec.
 
-### Avoid `before(:all)` (unless you sure it's safe)
+## Avoid `before(:all)` (unless you sure it's safe)
 
 - Use [rubocop-rspec](https://github.com/rubocop-hq/rubocop-rspec) `RSpec/BeforeAfterAll` cop to find `before(:all)` usage
 - Consider replacing with `before` or [`before_all`](https://test-prof.evilmartians.io/#/before_all)
 
-### Travel through time and always return back
+## Travel through time and always return back
 
 - Find leaking time travelling with [`TimecopLinter`](../tools/timecop_linter)
 - Add `config.after { Timecop.return }`
 - If you rely on time zones in the app, randomize the current time zone in tests (e.g. with [`zonebie`](https://github.com/alindeman/zonebie)) to make sure your tests don't depend on it.
 
-### Clear cache / in-memory stores after each test
+## Clear cache / in-memory stores after each test
 
 For example, for ActiveJob (to avoid [`have_enqueued_job`](https://relishapp.com/rspec/rspec-rails/docs/matchers/have-enqueued-job-matcher) matcher catching jobs from other tests):
   
@@ -37,11 +37,11 @@ RSpec.configure do |config|
 end
 ```
 
-### Generated data must be random enough
+## Generated data must be random enough
 
 - Respect DB uniquness constraint in your factories (check with [`FactoryLinter`](../tools/factory_linter))
 
-### Make sure tests pass offline
+## Make sure tests pass offline
 
 Tests should not depend on the unknown outside world.
 
@@ -107,7 +107,7 @@ end
 before { stub_const "S3Object", S3ObjectMock }
 ```
 
-### Do not `sleep` in tests
+## Do not `sleep` in tests
 
 When writing System Tests avoid indeterministic `sleep 1` and
 use `have_xyz` matchers instead–they keep internal timeout and could _wait_ for
@@ -115,11 +115,11 @@ event to happened.
 
 Remember: **Time is relative** (Einstein).
 
-### Match arrays with `match_array`
+## Match arrays with `match_array`
 
 If you don't need to the exact ordering, use [`match_array`](https://www.rubydoc.info/github/rspec/rspec-expectations/RSpec/Matchers:match_array) matcher instead of `eq([...])`.
 
-### Testing `NotFound` with random IDs
+## Testing `NotFound` with random IDs
 
 If you test not-found-like behaviour you can make up non-existent IDs like this:
 

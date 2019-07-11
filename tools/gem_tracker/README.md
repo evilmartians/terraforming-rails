@@ -9,8 +9,8 @@ Compares this set with the gems specified in Gemfile and report which gems haven
 - Drop the [`gem_tracker.rb`](./gem_tracker.rb) script into `spec/support` folder
 - Load it in your `rspec_helper.rb`
 - Run specs with `GEM_TRACK=1` env var:
- 
-```
+
+```sh
 $ GEM_TRACK=1 bundle exec rspec
 
 Maybe unused gems:

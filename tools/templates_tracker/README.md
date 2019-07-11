@@ -11,8 +11,8 @@ Track view templates used during the execution of the tests and print the list o
 - Drop the [`templates_tracker_rspec.rb`](./templates_tracker_rspec.rb) script into `spec/support` folder
 - Load it in your `rspec_helper.rb`
 - Run specs with `TT=1` env var:
- 
-```
+
+```sh
 $ TT=1 bundle exec rspec
 
 ======== Unused Templates =========
@@ -23,7 +23,7 @@ $ TT=1 bundle exec rspec
 
 To print used templates use "debug" mode:
 
-```
+```sh
 $ TT=debug bundle exec rspec
 
 ======== Used Templates =========

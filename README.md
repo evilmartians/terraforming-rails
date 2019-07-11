@@ -24,13 +24,16 @@ They're not universal enough to be extracted into libraries (some depend on part
 ### Gems
 
 #### Tests
+
 - [TestProf](http://test-prof.evilmartians.io) – analyze and improve test suite performance
 
 #### Security
+
 - [bundler-audit](https://github.com/rubysec/bundler-audit) – check deps for known CVEs
 - [brakeman](https://brakemanscanner.org) – detect the app code's security issues
 
 #### Database
+
 - [database_validations](https://github.com/toptal/database_validations) – validations consistent with the DB constraints
 - [database_consistency](https://github.com/djezzzl/database_consistency) - check the consistency of the DB constraints and models validations
 - [isolator](https://github.com/palkan/isolator) – detect transactions with side-effects (_non-atomic_)
@@ -41,6 +44,7 @@ They're not universal enough to be extracted into libraries (some depend on part
 - [factory_trace](https://github.com/djezzzl/factory_trace) – detect unused FactoryBot factories/traits
 
 #### Configuration
+
 - [anyway_config](https://github.com/palkan/anyway_config) – transparently use multiple sources of configuration at once
 
 ### Automation Tools
@@ -49,7 +53,11 @@ They're not universal enough to be extracted into libraries (some depend on part
 - [danger](./examples/danger) – code review automation helper
 - [pronto](https://github.com/prontolabs/pronto) – linters runner to run checks only for the relevant changes
 
-## Resources
+## Examples
+
+- [CircleCI](./examples/circleci) — example CircleCI configuration files
+
+## Resources/Guides
 
 - [Fight the flaky tests](./guides/flaky.md)
 

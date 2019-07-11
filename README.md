@@ -46,7 +46,7 @@ They're not universal enough to be extracted into libraries (some depend on part
 ### Automation Tools
 
 - [lefthook](https://github.com/Arkweid/lefthook) – language-agnostic git hook manager
-- [danger](http://danger.systems) – code review automation helper
+- [danger](./examples/danger) – code review automation helper
 - [pronto](https://github.com/prontolabs/pronto) – linters runner to run checks only for the relevant changes
 
 ## Resources

@@ -1,3 +1,3 @@
 # Docker for development setup
 
-TBD
+🚧 The post is WIP. [Stay tuned!](https://dev.to/palkan_tula)

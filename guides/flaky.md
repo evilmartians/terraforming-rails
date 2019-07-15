@@ -138,4 +138,4 @@ expect { User.find(-1) }.to raise_error(ActiveRecord::RecordNotFound)
 ## Read more
 
 - [Tests that sometimes fail](https://samsaffron.com/archive/2019/05/15/tests-that-sometimes-fail) by Sam Saffron
-- [Fixing Flaky Tests Like a Detective](https://speakerdeck.com/sonjapeterson/fixing-flaky-tests-like-a-detective) by Sonja Peterson
+- Fixing Flaky Tests Like a Detective ([slides](https://speakerdeck.com/sonjapeterson/fixing-flaky-tests-like-a-detective), [video](https://www.youtube.com/watch?v=qTyoMg_rmrQ&list=PLE7tQUdRKcyaOq3HlRm9h_Q_WhWKqm5xc)) by Sonja Peterson

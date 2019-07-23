@@ -29,6 +29,11 @@ interaction:
       s:
         service: rails
         compose_run_options: [service-ports]
+  
+  yarn:
+    service: backend
+    command: yarn
+    compose_run_options: [no-deps]
 
   rspec:
     service: backend
@@ -52,4 +57,5 @@ interaction:
 provision:
   - dip compose down --volumes
   - dip compose up -d postgres redis
+  - dip yarn install
   - dip bash -c ./bin/setup

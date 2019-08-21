@@ -61,7 +61,7 @@ services:
   postgres:
     image: postgres:11.1
     volumes:
-      - .psqlrc:/root/.psqlrc:ro
+      - .dockerdev/.psqlrc:/root/.psqlrc:ro
       - postgres:/var/lib/postgresql/data
       - ./log:/root/log:cached
     environment:

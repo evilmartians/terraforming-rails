@@ -45,7 +45,6 @@ services:
     <<: *backend
     command: /bin/bash
     ports:
-      - '3000:3000'
       - '3002:3002'
 
   rails:

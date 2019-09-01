@@ -1,46 +1,46 @@
 version: '3.4'
 
+x-app: &app
+  build:
+    context: .
+    dockerfile: ./.dockerdev/Dockerfile
+    args:
+      RUBY_VERSION: '2.6.3'
+      PG_MAJOR: '11'
+      NODE_MAJOR: '11'
+      YARN_VERSION: '1.13.0'
+      BUNDLER_VERSION: '2.0.2'
+  image: example-dev:1.0.0
+  tmpfs:
+    - /tmp
+
+x-backend: &backend
+  <<: *app
+  stdin_open: true
+  tty: true
+  volumes:
+    - .:/app:cached
+    - rails_cache:/app/tmp/cache
+    - bundle:/bundle
+    - node_modules:/app/node_modules
+    - packs:/app/public/packs
+    - .dockerdev/.psqlrc:/root/.psqlrc:ro
+  environment:
+    - NODE_ENV=development
+    - RAILS_ENV=${RAILS_ENV:-development}
+    - REDIS_URL=redis://redis:6379/
+    - DATABASE_URL=postgres://postgres:postgres@postgres:5432
+    - BOOTSNAP_CACHE_DIR=/bundle/bootsnap
+    - WEBPACKER_DEV_SERVER_HOST=webpacker
+    - WEB_CONCURRENCY=1
+    - HISTFILE=/app/log/.bash_history
+    - PSQL_HISTFILE=/app/log/.psql_history
+    - EDITOR=vi
+  depends_on:
+    - postgres
+    - redis
+
 services:
-  app: &app
-    build:
-      context: .
-      dockerfile: ./.dockerdev/Dockerfile
-      args:
-        RUBY_VERSION: '2.6.3'
-        PG_MAJOR: '11'
-        NODE_MAJOR: '11'
-        YARN_VERSION: '1.13.0'
-        BUNDLER_VERSION: '2.0.2'
-    image: example-dev:1.0.0
-    tmpfs:
-      - /tmp
-
-  backend: &backend
-    <<: *app
-    stdin_open: true
-    tty: true
-    volumes:
-      - .:/app:cached
-      - rails_cache:/app/tmp/cache
-      - bundle:/bundle
-      - node_modules:/app/node_modules
-      - packs:/app/public/packs
-      - .dockerdev/.psqlrc:/root/.psqlrc:ro
-    environment:
-      - NODE_ENV=development
-      - RAILS_ENV=${RAILS_ENV:-development}
-      - REDIS_URL=redis://redis:6379/
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432
-      - BOOTSNAP_CACHE_DIR=/bundle/bootsnap
-      - WEBPACKER_DEV_SERVER_HOST=webpacker
-      - WEB_CONCURRENCY=1
-      - HISTFILE=/app/log/.bash_history
-      - PSQL_HISTFILE=/app/log/.psql_history
-      - EDITOR=vi
-    depends_on:
-      - postgres
-      - redis
-
   runner:
     <<: *backend
     command: /bin/bash

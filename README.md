@@ -47,6 +47,10 @@ They're not universal enough to be extracted into libraries (some depend on part
 
 - [anyway_config](https://github.com/palkan/anyway_config) – transparently use multiple sources of configuration at once
 
+#### Analysis
+
+- [attractor](https://github.com/julianrubisch/attractor) — churn/complexity analysis
+
 ### Automation Tools
 
 - [lefthook](https://github.com/Arkweid/lefthook) – language-agnostic git hook manager

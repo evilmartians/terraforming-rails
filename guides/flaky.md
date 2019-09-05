@@ -83,11 +83,11 @@ class S3Object
   end
 
   def get
-    $s3.get_object(bucket: @bucket, key: @key).body.read
+    S3Client.get_object(bucket: @bucket, key: @key).body.read
   end
 
   def put!(file)
-    $s3.put_object(bucket: @bucket, key: @key, body: file)
+    S3Client.put_object(bucket: @bucket, key: @key, body: file)
   end
 end
 

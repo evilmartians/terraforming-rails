@@ -1,0 +1,12 @@
+require:
+  - standard/cop/semantic_blocks
+  - rubocop-md
+
+inherit_gem:
+  standard: config/base.yml
+
+Standard/SemanticBlocks:
+  Enabled: false
+
+Lint/DuplicateMethods:
+  Enabled: false

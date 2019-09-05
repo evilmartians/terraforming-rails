@@ -4,7 +4,7 @@ require "memory_profiler"
 require "set"
 
 # Tracks gems that are used by the application.
-# 
+#
 # Compares this set with the gems specified in Gemfile and
 # report which gems haven't left any trace during the execution.
 class GemTracker

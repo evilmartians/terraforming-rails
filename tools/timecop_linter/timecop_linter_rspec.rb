@@ -8,11 +8,13 @@ module TimecopLinter
     def example_group_finished(notification)
       return unless notification.group.top_level?
 
-      TestProf.log(
-        :warn,
-        "📛 ⏰ 📛 Timecop hasn't returned at the end of the test file!\n" \
-        "File: #{notification.group.metadata[:location]}\n"
-       ) if Timecop.frozen? 
+      if Timecop.frozen?
+        TestProf.log(
+          :warn,
+          "📛 ⏰ 📛 Timecop hasn't returned at the end of the test file!\n" \
+          "File: #{notification.group.metadata[:location]}\n"
+        )
+      end
     end
   end
 end

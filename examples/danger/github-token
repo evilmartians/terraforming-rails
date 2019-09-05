@@ -35,48 +35,45 @@ rescue LoadError
 end
 
 begin
+  # Private key contents
+  private_pem =
+    if ENV["GITHUB_APP_PRIVATE_KEY_PATH"]
+      File.read(ENV["GITHUB_APP_PRIVATE_KEY_PATH"])
+    else
+      ENV.fetch("GITHUB_APP_PRIVATE_KEY").gsub(/\\n/, "\n")
+    end
 
-# Private key contents
-private_pem =
-  if ENV["GITHUB_APP_PRIVATE_KEY_PATH"]
-    File.read(ENV["GITHUB_APP_PRIVATE_KEY_PATH"])
-  else
-    ENV.fetch("GITHUB_APP_PRIVATE_KEY").gsub(/\\n/, "\n")
+  private_key = OpenSSL::PKey::RSA.new(private_pem)
+
+  payload = {
+    iat: Time.now.to_i,
+    # JWT expiration time (10 minute maximum)
+    exp: Time.now.to_i + (10 * 60),
+    iss: ENV.fetch("GITHUB_APP_ID"),
+  }
+
+  jwt = JWT.encode(payload, private_key, "RS256")
+
+  uri = URI("https://api.github.com/app/installations/#{ENV.fetch("GITHUB_APP_INSTALLATION_ID")}/access_tokens")
+
+  req = Net::HTTP::Post.new(uri)
+  req["Authorization"] = "Bearer #{jwt}"
+  req["Accept"] = "application/vnd.github.machine-man-preview+json"
+
+  res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+    http.request(req)
   end
 
-private_key = OpenSSL::PKey::RSA.new(private_pem)
-
-payload = {
-  iat: Time.now.to_i,
-  # JWT expiration time (10 minute maximum)
-  exp: Time.now.to_i + (10 * 60),
-  iss: ENV.fetch("GITHUB_APP_ID")
-}
-
-jwt = JWT.encode(payload, private_key, "RS256")
-
-
-uri = URI("https://api.github.com/app/installations/#{ENV.fetch("GITHUB_APP_INSTALLATION_ID")}/access_tokens")
-
-req = Net::HTTP::Post.new(uri)
-req["Authorization"] = "Bearer #{jwt}"
-req["Accept"] = "application/vnd.github.machine-man-preview+json"
-
-res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-  http.request(req)
-end
-
-case res
-when Net::HTTPSuccess, Net::HTTPRedirection
-  puts JSON.parse(res.body).fetch("token")
-else
-  $stderr.puts res.value
-  $stderr.puts res.body
-end
-
-rescue Exception => e
-  $stderr.puts "Failed to generate GitHub token!"
-  $stderr.puts e.message
+  case res
+  when Net::HTTPSuccess, Net::HTTPRedirection
+    puts JSON.parse(res.body).fetch("token")
+  else
+    warn res.value
+    warn res.body
+  end
+rescue => e
+  warn "Failed to generate GitHub token!"
+  warn e.message
 
   exit(1)
 end

@@ -24,7 +24,7 @@ For example, `config.transactional_tests = true` for RSpec.
 ## Clear cache / in-memory stores after each test
 
 For example, for ActiveJob (to avoid [`have_enqueued_job`](https://relishapp.com/rspec/rspec-rails/docs/matchers/have-enqueued-job-matcher) matcher catching jobs from other tests):
-  
+
 ```ruby
 RSpec.configure do |config|
   config.after do
@@ -46,7 +46,7 @@ end
 Tests should not depend on the unknown outside world.
 
 - Wrap deps into testable modules/classes:
-  
+
 ```ruby
 # Make Resolv testable
 module Resolver
@@ -72,7 +72,7 @@ Resolver.test!
 ```
 
 - Provide mock implementations:
-  
+
 ```ruby
 # App-specific wrapper over S3
 class S3Object

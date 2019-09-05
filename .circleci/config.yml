@@ -18,6 +18,9 @@ workflows:
       - rubocop:
           requires:
             - checkout
+      - compose:
+          requires:
+            - checkout
 
 executors:
   golang:
@@ -94,3 +97,12 @@ jobs:
       - run:
           name: Check Ruby style
           command: rubocop .
+  compose:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Validate docker-compose.yml example config
+          command: docker-compose -f ./examples/dockerdev/docker-compose.yml config > /dev/null

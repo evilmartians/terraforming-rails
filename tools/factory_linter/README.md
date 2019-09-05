@@ -4,7 +4,7 @@ Perform different checks against [Factory Bot](https://github.com/thoughtbot/fac
 
 - Load all defined factories (**NOTE:** requires `eager_load = true`)
 - Run defined checks against each factory
-- Fails (`exit(1)`) when at aleast one check generated an error.
+- Fails (`exit(1)`) when at least one check generated an error.
 
 List of checks:
 

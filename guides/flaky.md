@@ -17,7 +17,7 @@ For example, `config.transactional_tests = true` for RSpec.
 
 ## Travel through time and always return back
 
-- Find leaking time travelling with [`TimecopLinter`](../tools/timecop_linter)
+- Find leaking time traveling with [`TimecopLinter`](../tools/timecop_linter)
 - Add `config.after { Timecop.return }`
 - If you rely on time zones in the app, randomize the current time zone in tests (e.g. with [`zonebie`](https://github.com/alindeman/zonebie)) to make sure your tests don't depend on it.
 
@@ -39,13 +39,13 @@ end
 
 ## Generated data must be random enough
 
-- Respect DB uniquness constraint in your factories (check with [`FactoryLinter`](../tools/factory_linter))
+- Respect DB uniqueness constraint in your factories (check with [`FactoryLinter`](../tools/factory_linter))
 
 ## Make sure tests pass offline
 
 Tests should not depend on the unknown outside world.
 
-- Wrap deps into testable modules/classes:
+- Wrap dependencies into testable modules/classes:
 
 ```ruby
 # Make Resolv testable

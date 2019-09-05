@@ -32,7 +32,7 @@ module TemplatesTracker
     # FIXME: check other view paths (using config.paths)
     # Currently, only takes into account the app's templates.
     def all
-      Dir[root + '/app/views/**/*.erb']
+      Dir[root + "/app/views/**/*.erb"]
     end
 
     private
@@ -53,7 +53,6 @@ module TemplatesTracker
     end
   end
 end
-
 
 if ENV["TT"]
   TemplatesTracker.start(ENV["TT"])

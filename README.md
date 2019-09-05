@@ -9,7 +9,7 @@ Based on the RailsConf 2019 talk ["Terraforming legacy Rails applications"](http
 
 ## Tools
 
-### Unrealesed scripts
+### Unreleased scripts
 
 These scripts have been created during the development of different Rails projects at [Evil Martians](http://evilmartians.com).
 
@@ -19,7 +19,7 @@ They're not universal enough to be extracted into libraries (some depend on part
 - [FactoryLinter](./tools/factory_linter) – lint factory definitions
 - [TimecopLinter](./tools/timecop_linter) – make sure you always travel back in time when using Timecop
 - [TemplatesTracker](./tools/templates_tracker) – track unused templates
-- [GemTracker](./tools/gem_tracker) - track potenially unused gems.
+- [GemTracker](./tools/gem_tracker) - track potentially unused gems.
 
 ### Gems
 
@@ -29,7 +29,7 @@ They're not universal enough to be extracted into libraries (some depend on part
 
 #### Security
 
-- [bundler-audit](https://github.com/rubysec/bundler-audit) – check deps for known CVEs
+- [bundler-audit](https://github.com/rubysec/bundler-audit) – check dependencies for known CVEs
 - [brakeman](https://brakemanscanner.org) – detect the app code's security issues
 
 #### Database

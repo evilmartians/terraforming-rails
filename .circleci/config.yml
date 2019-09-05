@@ -1,0 +1,108 @@
+version: 2.1
+
+# Workflow definition
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout
+      - md_lint:
+          requires:
+            - checkout
+      - links_lint:
+          requires:
+            - checkout
+      - spelling:
+          requires:
+            - checkout
+      - rubocop:
+          requires:
+            - checkout
+      - compose:
+          requires:
+            - checkout
+
+executors:
+  golang:
+    docker:
+      - image: circleci/golang:1.13
+  ruby:
+    docker:
+      - image: circleci/ruby:2.6-stretch
+# Jobs definitions
+jobs:
+  checkout:
+    executor: ruby
+    steps:
+      - restore_cache:
+          keys:
+            - terraforming-source-v1-{{ .Branch }}-{{ .Revision }}
+            - terraforming-source-v1-{{ .Branch }}
+            - terraforming-source-v1
+      - checkout
+      - save_cache:
+          key: terraforming-source-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - .git
+      - persist_to_workspace:
+          root: .
+          paths: .
+  md_lint:
+    executor: ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install mdl
+          command: gem install mdl
+      - run:
+          name: Markdown lint
+          command: mdl .
+  links_lint:
+    executor: golang
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install liche
+          command: go get -u github.com/raviqqe/liche
+      - run:
+          name: Check links
+          command: liche -r .
+  spelling:
+    executor: ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install hunspell
+          command: sudo apt-get install -y hunspell
+      - run:
+          name: Install forspell
+          command: gem install forspell
+      - run:
+          name: Check spelling
+          command: forspell .
+  rubocop:
+    executor: ruby
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install standard
+          command: gem install standard
+      - run:
+          name: Install rubocop-md
+          command: gem install rubocop-md
+      - run:
+          name: Check Ruby style
+          command: rubocop .
+  compose:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Validate docker-compose.yml example config
+          command: docker-compose -f ./examples/dockerdev/docker-compose.yml config > /dev/null

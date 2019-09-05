@@ -1,5 +1,5 @@
 module FactoryLinter
-  # Add @block accessor to attriute
+  # Add @block accessor to attribute
   using(Module.new do
     refine FactoryBot::Attribute do
       attr_reader :block

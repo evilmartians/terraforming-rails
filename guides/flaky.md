@@ -17,14 +17,14 @@ For example, `config.transactional_tests = true` for RSpec.
 
 ## Travel through time and always return back
 
-- Find leaking time travelling with [`TimecopLinter`](../tools/timecop_linter)
+- Find leaking time traveling with [`TimecopLinter`](../tools/timecop_linter)
 - Add `config.after { Timecop.return }`
 - If you rely on time zones in the app, randomize the current time zone in tests (e.g. with [`zonebie`](https://github.com/alindeman/zonebie)) to make sure your tests don't depend on it.
 
 ## Clear cache / in-memory stores after each test
 
 For example, for ActiveJob (to avoid [`have_enqueued_job`](https://relishapp.com/rspec/rspec-rails/docs/matchers/have-enqueued-job-matcher) matcher catching jobs from other tests):
-  
+
 ```ruby
 RSpec.configure do |config|
   config.after do
@@ -39,14 +39,14 @@ end
 
 ## Generated data must be random enough
 
-- Respect DB uniquness constraint in your factories (check with [`FactoryLinter`](../tools/factory_linter))
+- Respect DB uniqueness constraint in your factories (check with [`FactoryLinter`](../tools/factory_linter))
 
 ## Make sure tests pass offline
 
 Tests should not depend on the unknown outside world.
 
-- Wrap deps into testable modules/classes:
-  
+- Wrap dependencies into testable modules/classes:
+
 ```ruby
 # Make Resolv testable
 module Resolver
@@ -72,7 +72,7 @@ Resolver.test!
 ```
 
 - Provide mock implementations:
-  
+
 ```ruby
 # App-specific wrapper over S3
 class S3Object
@@ -83,11 +83,11 @@ class S3Object
   end
 
   def get
-    $s3.get_object(bucket: @bucket, key: @key).body.read
+    S3Client.get_object(bucket: @bucket, key: @key).body.read
   end
 
   def put!(file)
-    $s3.put_object(bucket: @bucket, key: @key, body: file)
+    S3Client.put_object(bucket: @bucket, key: @key, body: file)
   end
 end
 

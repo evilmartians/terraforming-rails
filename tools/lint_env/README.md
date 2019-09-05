@@ -8,7 +8,7 @@ on the explicit configuration instead.
 ## Usage
 
 - Copy [`lint_env.rb`](./lint_env.rb) to `lib/rubocop/cop/lint_env.rb`
-- (optionaly) Copy [`lint_env_spec.rb`](./lint_env_spec.rb) to `spec/lib/rubocop/cop/lint_env_spec.rb` (if you want to make and test changes)
+- (optionally) Copy [`lint_env_spec.rb`](./lint_env_spec.rb) to `spec/lib/rubocop/cop/lint_env_spec.rb` (if you want to make and test changes)
 - Add the following to your `.rubocop.yml`:
 
 ```yml

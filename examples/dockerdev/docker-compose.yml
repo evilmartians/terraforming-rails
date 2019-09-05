@@ -10,9 +10,9 @@ x-app: &app
       NODE_MAJOR: '11'
       YARN_VERSION: '1.13.0'
       BUNDLER_VERSION: '2.0.2'
-    environment: &env
-      NODE_ENV: development
-      RAILS_ENV: ${RAILS_ENV:-development}
+  environment: &env
+    NODE_ENV: development
+    RAILS_ENV: ${RAILS_ENV:-development}
   image: example-dev:1.0.0
   tmpfs:
     - /tmp

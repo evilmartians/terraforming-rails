@@ -1,5 +1,3 @@
-require "rubocop/rspec/language"
-
 module RuboCop
   module Cop
     module Lint

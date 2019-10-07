@@ -8,7 +8,7 @@ ARG YARN_VERSION
 
 # Add PostgreSQL to sources list
 RUN curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
-  && echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
+  && echo "deb http://apt.postgresql.org/pub/repos/apt/ `awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release`-pgdg main" $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 
 # Add NodeJS to sources list
 RUN curl -sL https://deb.nodesource.com/setup_$NODE_MAJOR.x | bash -
@@ -40,7 +40,7 @@ ENV BUNDLE_APP_CONFIG=$BUNDLE_PATH \
   BUNDLE_BIN=$BUNDLE_PATH/bin
 ENV PATH /app/bin:$BUNDLE_BIN:$PATH
 
-# Upgrade RubyGems and install required Bundler version 
+# Upgrade RubyGems and install required Bundler version
 RUN gem update --system && \
     gem install bundler:$BUNDLER_VERSION
 

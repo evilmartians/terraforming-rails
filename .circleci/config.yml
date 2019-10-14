@@ -26,6 +26,8 @@ executors:
   golang:
     docker:
       - image: circleci/golang:1.13
+    environment:
+      GO111MODULE: "on"
   ruby:
     docker:
       - image: circleci/ruby:2.6-stretch

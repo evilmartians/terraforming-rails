@@ -13,7 +13,7 @@ on the explicit configuration instead.
 
 ```yml
 require:
-  - lib/rubocop/cop/lint_env
+  - ./lib/rubocop/cop/lint_env
 
 
 Lint/Env:
@@ -32,3 +32,18 @@ Lint/Env:
 ```
 
 - Run RuboCop.
+
+### Configuration
+
+You can allow some `ENV` keys (or all of them) by configuring `AllowEnv` option:
+
+```yml
+Lint/Env:
+  # ...
+  # allow specified keys
+  AllowedEnv:
+    - DEBUG
+  
+  # or allow all ENV calls
+  AllowedEnv: all
+```

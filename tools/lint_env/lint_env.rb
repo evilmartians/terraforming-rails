@@ -13,7 +13,7 @@ module RuboCop
         PATTERN
 
         def_node_matcher :rails_env?, <<~PATTERN
-          (send (send {(const nil? :Rails) (const (cbase) :Rails)} :env) *)
+          (send {(const nil? :Rails) (const (cbase) :Rails)} :env)
         PATTERN
 
         def on_const(node)
@@ -24,7 +24,7 @@ module RuboCop
 
         def on_send(node)
           return unless rails_env?(node)
-          add_offense(node.parent, location: :selector, message: MSG_RAILS_ENV + USAGE_MSG)
+          add_offense(node.parent.type == :send ? node.parent : node, location: :selector, message: MSG_RAILS_ENV + USAGE_MSG)
         end
 
         private

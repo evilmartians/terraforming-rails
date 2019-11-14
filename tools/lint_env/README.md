@@ -2,7 +2,7 @@
 
 Checks that application code doesn't rely on env variables or env name.
 
-Application code should know about the _magical environment_ and should rely
+Application code should not know about the _magical environment_ and should rely
 on the explicit configuration instead.
 
 ## Usage

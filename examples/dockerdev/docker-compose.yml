@@ -1,4 +1,4 @@
-version: '3.4'
+version: '2.4'
 
 x-app: &app
   build:
@@ -13,7 +13,7 @@ x-app: &app
   environment: &env
     NODE_ENV: development
     RAILS_ENV: ${RAILS_ENV:-development}
-  image: example-dev:1.0.0
+  image: example-dev:1.1.0
   tmpfs:
     - /tmp
 
@@ -24,15 +24,16 @@ x-backend: &backend
   volumes:
     - .:/app:cached
     - rails_cache:/app/tmp/cache
-    - bundle:/bundle
+    - bundle:/usr/local/bundle
     - node_modules:/app/node_modules
     - packs:/app/public/packs
     - .dockerdev/.psqlrc:/root/.psqlrc:ro
+    - .dockerdev/.bashrc:/root/.bashrc:ro
   environment:
     <<: *env
     REDIS_URL: redis://redis:6379/
     DATABASE_URL: postgres://postgres:postgres@postgres:5432
-    BOOTSNAP_CACHE_DIR: /bundle/bootsnap
+    BOOTSNAP_CACHE_DIR: /usr/local/bundle/_bootsnap
     WEBPACKER_DEV_SERVER_HOST: webpacker
     WEB_CONCURRENCY: 1
     HISTFILE: /app/log/.bash_history
@@ -85,7 +86,7 @@ services:
       - '3035:3035'
     volumes:
       - .:/app:cached
-      - bundle:/bundle
+      - bundle:/usr/local/bundle
       - node_modules:/app/node_modules
       - packs:/app/public/packs
     environment:

@@ -43,7 +43,7 @@ Lint/Env:
   # allow specified keys
   AllowedEnv:
     - DEBUG
-  
+
   # or allow all ENV calls
   AllowedEnv: all
 ```

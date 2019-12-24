@@ -40,8 +40,10 @@ x-backend: &backend
     PSQL_HISTFILE: /app/log/.psql_history
     EDITOR: vi
   depends_on:
-    - postgres
-    - redis
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
 
 services:
   runner:
@@ -71,6 +73,9 @@ services:
       PSQL_HISTFILE: /root/log/.psql_history
     ports:
       - 5432
+    healthcheck:
+      test: pg_isready -U postgres -h 127.0.0.1
+      interval: 5s
 
   redis:
     image: redis:3.2-alpine
@@ -78,6 +83,11 @@ services:
       - redis:/data
     ports:
       - 6379
+    healthcheck:
+      test: redis-cli ping
+      interval: 1s
+      timeout: 3s
+      retries: 30
 
   webpacker:
     <<: *app

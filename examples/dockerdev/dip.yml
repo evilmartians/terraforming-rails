@@ -10,29 +10,29 @@ compose:
 interaction:
   sh:
     description: Open a Bash shell within a Rails container (with dependencies up)
-    service: backend
+    service: runner
     command: /bin/bash
 
   bash:
     description: Run an arbitrary script within a container (or open a shell without deps)
-    service: backend
+    service: runner
     command: /bin/bash
     compose_run_options: [no-deps]
 
   bundle:
     description: Run Bundler commands
-    service: backend
+    service: runner
     command: bundle
     compose_run_options: [no-deps]
 
   rake:
     description: Run Rake commands
-    service: backend
+    service: runner
     command: bundle exec rake
 
   rails:
     description: Run Rails commands
-    service: backend
+    service: runner
     command: bundle exec rails
     subcommands:
       s:
@@ -43,20 +43,20 @@ interaction:
 
   yarn:
     description: Run Yarn commands
-    service: backend
+    service: runner
     command: yarn
     compose_run_options: [no-deps]
 
   rspec:
     description: Run Rails tests
-    service: backend
+    service: runner
     environment:
       RAILS_ENV: test
     command: bundle exec rspec
 
   rubocop:
     description: Run Rubocop
-    service: backend
+    service: runner
     command: bundle exec rubocop
     compose_run_options: [no-deps]
 

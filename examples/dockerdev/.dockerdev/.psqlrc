@@ -2,7 +2,7 @@
 \set QUIET 1
 
 -- Allow specifying the path to history file via `PSQL_HISTFILE` env variable
--- (and fallback to the defaukt $HOME/.psql_history otherwise)
+-- (and fallback to the default $HOME/.psql_history otherwise)
 \set HISTFILE `[[ -z $PSQL_HISTFILE ]] && echo $HOME/.psql_history || echo $PSQL_HISTFILE`
 
 -- Show how long each query takes to execute

@@ -1,0 +1,63 @@
+#!/usr/bin/env ruby
+
+prev_head, curr_head, branch_change, * = ARGV
+
+exit if branch_change == "0"   # Don't run on file checkouts (`git restore path/file` or `git checkout -- path/file`)
+exit if prev_head == curr_head # Don't run if we're still on the same commit
+
+app_dir = File.expand_path("../..", __dir__)
+ENV["BUNDLE_GEMFILE"] ||= File.join(app_dir, "Gemfile")
+require "bundler/setup"
+
+require "git"
+git = Git.open(app_dir)
+
+# Don't run if there were no migrations added between revisions
+diff = git.diff(prev_head, curr_head).path("db/migrate")
+exit if diff.size.zero?
+
+# Load rails application with rake tasks
+require File.expand_path("config/boot", app_dir)
+require File.expand_path("config/application", app_dir)
+require "rake"
+Rails.application.load_tasks
+
+Rake::Task["db:load_config"].invoke
+
+# migrations added in prev_head (and thus deleted in curr_head) that we need to rollback
+rollback_migration_files = diff.select { |file| file.type == "deleted" }
+
+if rollback_migration_files.any?
+  require "tmpdir"
+  MigrationFilenameRegexp = ActiveRecord::Migration::MigrationFilenameRegexp
+
+  versions = []
+  Dir.mktmpdir do |directory|
+    # Extract migrations from commit that we have left and save to separate directory
+    rollback_migration_files.each do |diff_file|
+      filename = File.basename(diff_file.path)
+      contents = git.gblob("#{prev_head}:#{diff_file.path}").contents
+      File.write(File.join(directory, filename), contents)
+      version = filename.scan(MigrationFilenameRegexp).first&.first
+      versions.push(version) if version
+    end
+
+    # Rollback every migration that exists in prev_head and doesn't exist in curr_head
+    begin
+      old_migration_paths = ActiveRecord::Migrator.migrations_paths
+      ActiveRecord::Migrator.migrations_paths.push(directory)
+
+      versions.sort.reverse_each do |version|
+        ENV["VERSION"] = version
+        Rake::Task["db:migrate:down"].execute
+      end
+    ensure
+      ENV.delete("VERSION")
+      ActiveRecord::Migrator.migrations_paths = old_migration_paths
+    end
+  end
+end
+
+# We don't have to do any magic with +up+ migrations
+# because we already have them checked out in the working directory
+Rake::Task["db:migrate"].invoke

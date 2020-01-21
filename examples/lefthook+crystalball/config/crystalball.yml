@@ -1,0 +1,3 @@
+---
+map_expiration_period: 604800 # 1 week
+diff_from: origin/master      # By default crystalball checks things that are different from the last commit in current branch

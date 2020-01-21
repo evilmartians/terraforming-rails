@@ -1,0 +1,19 @@
+pre-push:
+  parallel: true
+  commands:
+    rubocop:
+      tags: backend
+      run: bundle exec rubocop
+    rspec:
+      tags: rspec backend
+      run: bundle exec crystalball --fail-fast
+
+post-checkout:
+  piped: true
+  scripts:
+    01-bundle-checkinstall:
+      tags: backend
+    02-db-migrate:
+      tags: backend
+    03-crystalball-update:
+      tags: rspec backend

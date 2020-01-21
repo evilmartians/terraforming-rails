@@ -61,7 +61,7 @@ They're not universal enough to be extracted into libraries (some depend on part
 
 - [CircleCI](./examples/circleci) — example CircleCI configuration files
 - [Docker for Dev](./examples/dockerdev) — example Docker for development configuration
-- [Lefthook + Crystalball](./examples/dockerdev) — git hooks for convenient development environment
+- [Lefthook + Crystalball](./examples/lefthook+crystalball) — git hooks for convenient development environment
 
 ## Resources/Guides
 

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Don't run if it is `git restore path/file` or `git checkout -- path/file` command
+BRANCH_CHANGE=$3
+[[ $BRANCH_CHANGE -eq 0 ]] && exit
+
+# Don't run if we actually didn't change our location in git history
+PREV_HEAD=$1
+CURR_HEAD=$2
+[ $PREV_HEAD == $CURR_HEAD ] && exit
+
+# Don't run bundler at all if there were no changes in gems as bundler runs noticeably long
+git diff --quiet --exit-code $PREV_HEAD $CURR_HEAD -- Gemfile.lock && exit;
+
+# Output of `bundle check` is much more brief
+bundle check || bundle install

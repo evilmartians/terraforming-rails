@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+_prev_head, _curr_head, branch_change, * = ARGV
+
+exit if branch_change == "0" # Don't run on file checkouts
+
+app_dir = File.expand_path("../..", __dir__)
+ENV["BUNDLE_GEMFILE"] ||= File.join(app_dir, "Gemfile")
+require "bundler/setup"
+
+require "git"
+
+exit unless Git.open(app_dir).current_branch == "master"
+
+require "crystalball"
+config = Crystalball::RSpec::Runner.config
+prediction_builder = Crystalball::RSpec::Runner.prediction_builder
+
+if !File.exists?(config["execution_map_path"]) || prediction_builder.expired_map?
+  puts "Crystalball Ruby code execution maps are out of date. Performing full test suite to update them…"
+
+  ENV["CRYSTALBALL"] = "true"
+  RSpec::Core::Runner.run([app_dir])
+else
+  puts "Crystalball Ruby code execution maps are up to date."
+end

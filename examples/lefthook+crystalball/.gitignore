@@ -1,0 +1,3 @@
+# Local configuration for lefthook allows every developer to disable some checks or override them
+# See https://github.com/Arkweid/lefthook#local-config
+lefthook-local.yml

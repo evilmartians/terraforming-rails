@@ -1,4 +1,4 @@
-# Smooth development experience with [Lefthook] and [Crystalball]
+# [Lefthook] and [Crystalball]
 
 Read this post for more information: [Lefthook, Crystalball, and git magic for smooth development experience](https://evilmartians.com/chronicles/lefthook-crystalball-and-git-magic).
 
@@ -10,7 +10,7 @@ Read this post for more information: [Lefthook, Crystalball, and git magic for s
 
  1. Rollbacks migrations that are present only on some feature branch on checkout from that branch to another.
 
- 1. Runs only relevant part of your test suite (using [crystalball] gem) on `git push`, aborts push as soon as the first spec is failed.
+ 1. Runs only relevant part of your test suite (via [crystalball] gem) on `git push`, aborts push when the first spec is failed.
 
  1. Updates crystalball code execution maps once a week.
 

@@ -38,7 +38,7 @@ RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get -yq dist-upgrad
     postgresql-client-$PG_MAJOR \
     nodejs \
     yarn=$YARN_VERSION-1 \
-    $(cat /tmp/Aptfile | xargs) && \
+    $(grep -Ev '^\s*#' /tmp/Aptfile | xargs) && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     truncate -s 0 /var/log/*log

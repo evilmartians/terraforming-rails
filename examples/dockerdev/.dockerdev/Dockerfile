@@ -14,10 +14,16 @@ RUN apt-get update -qq \
     curl \
     less \
     git \
+    shared-mime-info \
   && apt-get clean \
   && rm -rf /var/cache/apt/archives/* \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
   && truncate -s 0 /var/log/*log
+
+RUN cp /usr/share/mime/packages/freedesktop.org.xml ./ \
+  && apt-get remove -y --purge shared-mime-info \
+  && mkdir -p /usr/share/mime/packages \
+  && cp ./freedesktop.org.xml /usr/share/mime/packages/
 
 # Add PostgreSQL to sources list
 RUN curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \

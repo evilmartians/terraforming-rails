@@ -11,8 +11,9 @@ x-app: &app
       YARN_VERSION: '1.13.0'
       BUNDLER_VERSION: '2.0.2'
   environment: &env
-    NODE_ENV: development
+    NODE_ENV: ${NODE_ENV:-development}
     RAILS_ENV: ${RAILS_ENV:-development}
+    YARN_CACHE_FOLDER: /app/node_modules/.yarn-cache
   image: example-dev:1.1.0
   tmpfs:
     - /tmp

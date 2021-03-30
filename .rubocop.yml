@@ -1,11 +1,11 @@
 require:
-  - standard/cop/semantic_blocks
+  - standard/cop/block_single_line_braces
   - rubocop-md
 
 inherit_gem:
   standard: config/base.yml
 
-Standard/SemanticBlocks:
+Standard/BlockSingleLineBraces:
   Enabled: false
 
 Lint/DuplicateMethods:

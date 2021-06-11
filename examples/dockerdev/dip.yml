@@ -1,4 +1,4 @@
-version: '4.1'
+version: '6.1'
 
 environment:
   RAILS_ENV: development

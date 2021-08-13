@@ -36,7 +36,7 @@ x-backend: &backend
     DATABASE_URL: postgres://postgres:postgres@postgres:5432
     BOOTSNAP_CACHE_DIR: /usr/local/bundle/_bootsnap
     WEBPACKER_DEV_SERVER_HOST: webpacker
-    WEB_CONCURRENCY: 1
+    WEB_CONCURRENCY: 0
     HISTFILE: /app/log/.bash_history
     PSQL_HISTFILE: /app/log/.psql_history
     EDITOR: vi

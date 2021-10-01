@@ -7,14 +7,14 @@ x-app: &app
     args:
       RUBY_VERSION: '2.6.3'
       PG_MAJOR: '13'
-      NODE_MAJOR: '11'
-      YARN_VERSION: '1.13.0'
-      BUNDLER_VERSION: '2.0.2'
+      NODE_MAJOR: '14'
+      YARN_VERSION: '1.22.15'
+      BUNDLER_VERSION: '2.2.28'
   environment: &env
     NODE_ENV: ${NODE_ENV:-development}
     RAILS_ENV: ${RAILS_ENV:-development}
     YARN_CACHE_FOLDER: /app/node_modules/.yarn-cache
-  image: example-dev:1.1.0
+  image: example-dev:1.1.1
   tmpfs:
     - /tmp
 

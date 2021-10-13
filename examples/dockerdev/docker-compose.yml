@@ -17,6 +17,7 @@ x-app: &app
   image: example-dev:1.1.1
   tmpfs:
     - /tmp
+    - /app/tmp/pids
 
 x-backend: &backend
   <<: *app

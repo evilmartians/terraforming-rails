@@ -27,6 +27,7 @@ x-backend: &backend
     - .:/app:cached
     - rails_cache:/app/tmp/cache
     - bundle:/usr/local/bundle
+    - yarn:/usr/local/share/.cache/yarn
     - node_modules:/app/node_modules
     - packs:/app/public/packs
     - .dockerdev/.psqlrc:/root/.psqlrc:ro
@@ -113,3 +114,4 @@ volumes:
   node_modules:
   rails_cache:
   packs:
+  yarn:

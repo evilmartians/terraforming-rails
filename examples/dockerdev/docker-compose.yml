@@ -24,7 +24,7 @@ x-backend: &backend
   stdin_open: true
   tty: true
   volumes:
-    - .:/app:cached
+    - .:/app:cached,z
     - rails_cache:/app/tmp/cache
     - bundle:/usr/local/bundle
     - node_modules:/app/node_modules

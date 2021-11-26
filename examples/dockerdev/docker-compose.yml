@@ -27,13 +27,14 @@ x-backend: &backend
     - .:/app:cached
     # or for selinux: https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label
     # - .:/app:cached,z
-    - rails_cache:/app/tmp/cache
-    - bundle:/usr/local/bundle
-    - node_modules:/app/node_modules
-    - packs:/app/public/packs
-    - packs-test:/app/public/packs-test
-    - .dockerdev/.psqlrc:/root/.psqlrc:ro
-    - .dockerdev/.bashrc:/root/.bashrc:ro
+    - rails_cache:/app/tmp/cache:delegated
+    - bundle:/usr/local/bundle:delegated
+    - node_modules:/app/node_modules:delegated
+    - packs:/app/public/packs:delegated
+    - packs-test:/app/public/packs-test:delegated
+    - .dockerdev/.psqlrc:/root/.psqlrc:ro,cached
+    - .dockerdev/.bashrc:/root/.bashrc:ro,cached
+    - ./log:/root/log:delegated
   environment:
     <<: *env
     REDIS_URL: redis://redis:6379/
@@ -71,9 +72,9 @@ services:
   postgres:
     image: postgres:13.0
     volumes:
-      - .dockerdev/.psqlrc:/root/.psqlrc:ro
-      - postgres:/var/lib/postgresql/data
-      - ./log:/root/log:cached
+      - .dockerdev/.psqlrc:/root/.psqlrc:ro,cached
+      - postgres:/var/lib/postgresql/data:delegated
+      - ./log:/root/log:delegated
     environment:
       PSQL_HISTFILE: /root/log/.psql_history
       POSTGRES_PASSWORD: postgres
@@ -86,7 +87,7 @@ services:
   redis:
     image: redis:3.2-alpine
     volumes:
-      - redis:/data
+      - redis:/data:delegated
     ports:
       - 6379
     healthcheck:
@@ -102,9 +103,9 @@ services:
       - '3035:3035'
     volumes:
       - .:/app:cached
-      - bundle:/usr/local/bundle
-      - node_modules:/app/node_modules
-      - packs:/app/public/packs
+      - bundle:/usr/local/bundle:delegated
+      - node_modules:/app/node_modules:delegated
+      - packs:/app/public/packs:delegated
     environment:
       <<: *env
       WEBPACKER_DEV_SERVER_HOST: 0.0.0.0

@@ -49,7 +49,7 @@ begin
     iat: Time.now.to_i,
     # JWT expiration time (10 minute maximum)
     exp: Time.now.to_i + (10 * 60),
-    iss: ENV.fetch("GITHUB_APP_ID"),
+    iss: ENV.fetch("GITHUB_APP_ID")
   }
 
   jwt = JWT.encode(payload, private_key, "RS256")

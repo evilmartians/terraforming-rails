@@ -49,23 +49,22 @@ module FactoryLinter
 
     def unique_columns(model)
       @unique_columns ||= {}
-      @unique_columns[model.table_name] ||= begin
-        # Only take into account unique indexes with one column
-        model.connection.indexes(model.table_name).select do |index|
-          index.unique && (index.columns.size == 1 || String === index.columns)
-        end.map do |index|
-          if String === index.columns
-            # Try to guess an index column from its name (e.g. index_cities_on_name)
-            index.name.match(/index_#{model.table_name}_on_([^_]+)$/).then do |matches|
-              next unless matches
-              $stdout.puts "\e[37mUsing #{matches[1]} as column for #{model.table_name}##{index.name} (#{index.columns})\e[0m"
-              matches[1].to_sym
-            end
-          else
-            index.columns.first.to_sym
+
+      # Only take into account unique indexes with one column
+      @unique_columns[model.table_name] ||= model.connection.indexes(model.table_name).select do |index|
+        index.unique && (index.columns.size == 1 || String === index.columns)
+      end.map do |index|
+        if String === index.columns
+          # Try to guess an index column from its name (e.g. index_cities_on_name)
+          index.name.match(/index_#{model.table_name}_on_([^_]+)$/).then do |matches|
+            next unless matches
+            $stdout.puts "\e[37mUsing #{matches[1]} as column for #{model.table_name}##{index.name} (#{index.columns})\e[0m"
+            matches[1].to_sym
           end
-        end.compact
-      end
+        else
+          index.columns.first.to_sym
+        end
+      end.compact
     end
 
     # Takes definition and raises error

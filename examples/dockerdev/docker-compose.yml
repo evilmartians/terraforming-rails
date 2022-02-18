@@ -14,7 +14,7 @@ x-app: &app
     NODE_ENV: ${NODE_ENV:-development}
     RAILS_ENV: ${RAILS_ENV:-development}
     YARN_CACHE_FOLDER: /app/node_modules/.yarn-cache
-  image: example-dev:1.1.1
+  image: example-dev:1.1.2
   tmpfs:
     - /tmp
     - /app/tmp/pids

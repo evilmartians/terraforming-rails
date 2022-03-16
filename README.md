@@ -60,7 +60,7 @@ They're not universal enough to be extracted into libraries (some depend on part
 ## Examples
 
 - [CircleCI](./examples/circleci) — example CircleCI configuration files
-- [Docker for Dev](./examples/dockerdev) — example Docker for development configuration
+- [Docker for Dev](https://github.com/evilmartians/ruby-on-whales) — example Docker for development configuration
 - [Lefthook + Crystalball](./examples/lefthook+crystalball) — git hooks for convenient development environment
 
 ## Resources/Guides

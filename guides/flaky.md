@@ -2,6 +2,12 @@
 
 Tips on detecting and solving flaky tests in Rails apps.
 
+## ❗️Reproduce before fixing
+
+This is the most important rule: make sure you can reproduce the flakiness before starting to fix it.
+Flakiness is the bug, and like any other bug, it should be first identified. Find a root cause, and fix it.
+Even though the flakiness reasons could be identified by eyes, you still need to prove it with your code.
+
 ## Make sure tests run in random order
 
 For example, `config.order :random` for RSpec.

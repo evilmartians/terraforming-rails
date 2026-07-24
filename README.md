@@ -4,8 +4,9 @@ A collection of tools and guides to help you turn legacy code into [legendary co
 
 Based on the RailsConf 2019 talk ["Terraforming legacy Rails applications"](https://railsconf.com/program/sessions#session-832) ([slides](https://speakerdeck.com/palkan/railsconf-2019-terraforming-legacy-rails-applications), [video](https://www.youtube.com/watch?v=-NKpMn6XSjU)).
 
-<a href="https://evilmartians.com/">
-<img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54"></a>
+<br/>
+
+<img src="https://cdn.evilmartians.com/badges/logo-no-label.svg" alt="Evil Martians logo" width="22" height="16" /> This project is brought to you by <b><a href="https://evilmartians.com/">Evil Martians</a></b>, an American design and engineering consultancy for <b>developer tools, AI, and cybersecurity startups</b>.
 
 ## Tools
 
